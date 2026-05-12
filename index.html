@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lezzet Atlası | 3.0 Start-up Masterpiece</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary: #ff3838; 
+            --primary-dark: #cf2121;
+            --secondary: #1e272e; 
+            --accent: #ff9f43;
+            --success: #2ed573;
+            --danger: #d63031;
+            --bg: #f5f6fa; 
+            --card-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(0,0,0,0.06); 
+            --shadow-hover: 0 15px 35px rgba(255, 56, 56, 0.18);
+        }
+        
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; color: var(--secondary); overflow-x: hidden; }
+        
+        #auth-view { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, var(--primary) 0%, #ff9f43 100%); }
+        .auth-card { background: var(--card-bg); padding: 40px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 380px; text-align: center; transition: 0.3s; }
+        .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; border: 2px solid #f1f2f6; border-radius: 15px; outline: none; box-sizing: border-box; font-family: 'Poppins'; font-weight: 600; transition: 0.3s; }
+        .auth-input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(255,56,56,0.1); }
+
+        .marquee-bar { background: linear-gradient(90deg, #0f1319, var(--secondary)); color: white; padding: 16px 0; font-size: 1.15em; font-weight: 800; overflow: hidden; white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.25); border-bottom: 3px solid var(--accent); }
+        .marquee-content { display: inline-block; animation: marquee 25s linear infinite; }
+        .marquee-content span { color: #fff200; font-weight: 800; }
+        .marquee-content .free { color: var(--success); }
+        @keyframes marquee { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
+
+        .top-nav { background: var(--card-bg); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100; }
+        .clock { font-weight: 800; color: white; margin-left: 5px; background: linear-gradient(135deg, var(--primary), var(--accent)); padding: 6px 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(255,56,56,0.2); }
+        
+        .stats-bar { display: flex; gap: 20px; background: #f1f2f6; padding: 10px 25px; border-radius: 15px; font-weight: 600; font-size: 0.85em; border: 1px solid #e4e7eb; }
+        .stat-item span { color: var(--primary); font-weight: 800; font-size: 1.1em; }
+
+        .main-container { display: flex; gap: 30px; padding: 30px 40px; max-width: 1600px; margin: auto; }
+        .content-area { flex: 1; }
+        
+        .delivery-type-box { display: flex; background: #e4e7eb; padding: 6px; border-radius: 18px; width: fit-content; margin-bottom: 25px; border: 1px solid #dcdde1; }
+        .del-btn { padding: 10px 22px; border-radius: 14px; font-weight: 600; font-size: 0.85em; cursor: pointer; transition: 0.3s; color: #57606f; border: none; background: transparent; font-family: 'Poppins'; }
+        .del-btn.active { background: var(--card-bg); color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-weight: 800; transform: scale(1.02); }
+
+        .category-bar { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 30px; scrollbar-width: none; }
+        .category-bar::-webkit-scrollbar { display: none; }
+        .cat-btn { background: var(--card-bg); border: 2px solid #f1f2f6; padding: 8px 20px 8px 10px; border-radius: 25px; display: flex; align-items: center; gap: 12px; cursor: pointer; font-family: 'Poppins'; font-weight: 700; font-size: 0.85em; transition: 0.3s; white-space: nowrap; box-shadow: var(--shadow); color: var(--secondary); }
+        .cat-btn:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(255,159,67,0.15); }
+        .cat-btn.active { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border-color: var(--primary); box-shadow: 0 8px 20px rgba(255,56,56,0.25); }
+        .cat-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); background: #fff; }
+
+        .restaurant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        .res-card { background: var(--card-bg); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow); transition: 0.3s; border: 2px solid transparent; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+        .res-card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: var(--shadow-hover); }
+        .res-img { width: 100%; height: 170px; object-fit: cover; }
+        .res-badge { position: absolute; top: 12px; left: 12px; background: rgba(30, 39, 46, 0.85); color: white; backdrop-filter: blur(5px); padding: 5px 12px; border-radius: 12px; font-size: 0.75em; font-weight: 800; z-index: 1; border: 1px solid rgba(255,255,255,0.2); }
+        .res-badge.express { background: linear-gradient(135deg, var(--accent), #ff7675); color: white; border: none; box-shadow: 0 4px 10px rgba(255,159,67,0.3); }
+        .res-info { padding: 20px; text-align: left; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .res-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.8em; color: #747d8c; margin: 10px 0 15px 0; font-weight: 600; }
+        .res-rating { background: #fff3cd; color: #ff9f43; padding: 4px 10px; border-radius: 10px; font-weight: 800; display: flex; align-items: center; gap: 5px; border: 1px solid #ffeaa7; }
+
+        .order-track { width: 160px; background: #e4e7eb; height: 8px; border-radius: 10px; position: relative; margin-top: 10px; }
+        .order-track-fill { height: 100%; border-radius: 10px; transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .motor-node { position: absolute; top: -12px; transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-size: 1.3em; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+
+        .side-panel { width: 420px; background: var(--card-bg); border-radius: 35px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); position: sticky; top: 110px; height: calc(100vh - 150px); display: flex; flex-direction: column; border: 1px solid #f1f2f6; }
+        .cart-items-list { flex: 1; overflow-y: auto; padding-right: 5px; }
+
+        .min-order-warning { background: #fff0f0; border: 2px dashed var(--primary); color: var(--primary); padding: 12px; border-radius: 15px; font-size: 0.85em; font-weight: 800; text-align: center; margin-bottom: 15px; display: none; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+        .tip-box { display: flex; gap: 8px; margin: 10px 0; }
+        .tip-btn { flex: 1; padding: 10px; border: 2px solid #f1f2f6; background: #f8f9fa; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.8em; transition: 0.3s; font-family: 'Poppins'; color: #57606f; }
+        .tip-btn:hover { border-color: var(--accent); color: var(--secondary); }
+        .tip-btn.active { background: linear-gradient(135deg, #fff200, #ffb8b8); border-color: var(--primary); color: var(--primary-dark); font-weight: 800; box-shadow: 0 4px 10px rgba(255,56,56,0.15); }
+
+        .cross-sell-container { margin-top: 15px; padding-top: 15px; border-top: 2px solid #f1f2f6; }
+        .cross-sell-title { font-size: 0.8em; font-weight: 800; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+        .cross-sell-items { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .cross-sell-items::-webkit-scrollbar { display: none; }
+        .cs-item { background: #f8f9fa; border: 1px solid #e4e7eb; padding: 6px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; white-space: nowrap; color: var(--secondary); }
+        .cs-item:hover { border-color: var(--primary); background: #fff0f0; color: var(--primary); }
+        .cs-item img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
+
+        table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid #f1f2f6; }
+        th, td { padding: 18px; text-align: left; border-bottom: 1px solid #f1f2f6; font-size: 0.95em; }
+        th { background: #f8f9fa; font-weight: 700; color: var(--secondary); }
+        .badge { padding: 6px 12px; border-radius: 10px; font-size: 0.75em; font-weight: 800; background: #ffeaa7; color: #d35400; text-transform: uppercase; }
+        .badge.cancelled { background: #ffcccc; color: #cf2121; text-decoration: line-through; }
+        
+        .btn { border: none; padding: 12px 22px; border-radius: 15px; cursor: pointer; font-weight: 700; font-family: 'Poppins'; transition: 0.3s; box-sizing: border-box; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; width: 100%; box-shadow: 0 6px 15px rgba(255,56,56,0.25); }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,56,56,0.35); }
+        .btn-primary:disabled { background: #cbd5e0; cursor: not-allowed; box-shadow: none; }
+        .btn-danger { background: #ff7675; color: white; }
+        .btn-danger:hover { background: var(--danger); }
+        .btn-outline { background: #f1f2f6; color: var(--secondary); border: 1px solid #e4e7eb; font-weight: 600; }
+        .btn-outline:hover { background: #e4e7eb; }
+        .btn-sm { padding: 8px 16px; font-size: 0.8em; border-radius: 10px; }
+        .btn-icon { background: #f1f2f6; color: var(--secondary); width: 32px; height: 32px; border-radius: 50%; padding: 0; font-weight: 800; cursor: pointer; border: none; transition: 0.2s; }
+        .btn-icon:hover { background: var(--primary); color: white; }
+
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); }
+        .modal-content { background: var(--card-bg); margin: 5% auto; padding: 35px; border-radius: 30px; width: 500px; max-height: 80vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); }
+        .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #e4e7eb; font-size: 0.9em; font-weight: 600; }
+
+        #flashModal .modal-content { background: linear-gradient(135deg, #ffffff 0%, #fff0f0 100%); border: 3px solid var(--primary); text-align: center; width: 600px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .pop-res-showcase { display: flex; gap: 10px; justify-content: center; margin: 15px 0 25px 0; overflow-x: auto; padding: 5px; }
+        .pop-res-item { background: white; padding: 10px 15px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid #ffeaa7; display: flex; align-items: center; gap: 8px; font-size: 0.85em; font-weight: 700; color: var(--secondary); cursor: pointer; transition: 0.2s; font-family: 'Poppins'; }
+        .pop-res-item:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 6px 15px rgba(255,56,56,0.2); background: #fff9e6; }
+        .pop-res-item img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+
+        .flash-trigger-btn { position: fixed; bottom: 25px; left: 25px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; padding: 12px 25px; border-radius: 25px; font-weight: 800; font-family: 'Poppins'; box-shadow: 0 10px 25px rgba(255,56,56,0.4); border: 2px solid white; cursor: pointer; z-index: 999; display: none; }
+        
+        .menu-section-title { font-size: 0.85em; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 20px 0 10px 0; text-align: left; border-bottom: 2px solid #f1f2f6; padding-bottom: 5px; display: flex; align-items: center; gap: 5px; }
+
+        .custom-group { text-align: left; margin-bottom: 15px; background: #f8f9fa; padding: 12px; border-radius: 15px; border: 1px solid #e4e7eb; }
+        .custom-group label { display: block; font-size: 0.85em; font-weight: 700; margin-bottom: 6px; color: var(--secondary); }
+        .custom-option { display: flex; align-items: center; justify-content: space-between; font-size: 0.85em; padding: 4px 0; }
+    </style>
+</head>
+<body>
+
+<div id="auth-view">
+    <div class="auth-card">
+        <h1 style="color:var(--primary); margin-bottom:5px; font-weight:800; font-size:2.2em;">🍴 Lezzet Atlası</h1>
+        <h3 id="auth-mode-title" style="margin-top:0; color:#747d8c; margin-bottom:25px; font-weight:600;">Sistem Girişi</h3>
+        <input type="text" id="u" class="auth-input" placeholder="Kullanıcı Adı veya E-posta">
+        <input type="email" id="e" class="auth-input" placeholder="E-posta Adresi" style="display:none;">
+        <input type="password" id="p" class="auth-input" placeholder="Şifre">
+        <button id="auth-action-btn" onclick="login()" class="btn btn-primary" style="padding:16px; font-size:1.05em;">Giriş Yap</button>
+        <div style="margin-top:20px; font-size:0.85em; color:#747d8c;"><span id="auth-toggle-text">Hesabın yok mu?</span> <button onclick="toggleAuthMode()" style="background:none; border:none; color:var(--primary); font-weight:800; cursor:pointer;" id="auth-toggle-btn">Kayıt Ol</button></div>
+    </div>
+</div>
+
+<div id="app-view" style="display:none;">
+    <div class="marquee-bar">
+        <div class="marquee-content">
+            🎉 ŞOK KAMPANYA: <span>LEZZET50</span> kupon kodu ile sepette anında <span>50 ₺ İNDİRİM!</span> &nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp; 
+            🛵 EXPRESS KURYELER: Tokat merkez ve kampüs geneline <span class="free">30 dakikada ÜCRETSİZ teslimat!</span> &nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp; 
+            🥡 GEL-AL FIRSATI: Restorandan Gel-Al siparişlerinize kasada ekstra <span class="free">%10 İNDİRİM!</span>
+        </div>
+    </div>
+
+    <nav class="top-nav">
+        <div style="font-weight:700; font-size:1.1em;"><span id="welcome-msg" style="color:var(--secondary);">Merhaba</span>, <span id="user-display" style="color:var(--primary); font-weight:800;"></span>! <span class="clock" id="live-clock">00:00:00</span></div>
+        <div class="stats-bar"><div class="stat-item">Hazırlanıyor: <span id="stat-h">0</span></div><div class="stat-item">Yolda: <span id="stat-y">0</span></div><div class="stat-item">Teslim: <span id="stat-t">0</span></div></div>
+        <div style="display:flex; gap:10px;"><button class="btn btn-outline" style="color:var(--accent); border-color:#ffeaa7; background:#fff9e6;" onclick="openModal('cModal')"><i class="fas fa-ticket-alt"></i> Kuponlarım</button><button class="btn btn-outline" onclick="openModal('pModal')"><i class="fas fa-user-circle"></i> Profil</button><button class="btn" style="background:var(--secondary); color:white;" onclick="logout()">Çıkış</button></div>
+    </nav>
+
+    <div class="main-container">
+        <div class="content-area">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; font-size:1.5em; font-weight:800; color:var(--secondary);"><i class="fas fa-utensils" style="color:var(--primary);"></i> Restoranlar</h3>
+                <div style="position: relative; width: 340px;"><i class="fas fa-search" style="position: absolute; left: 18px; top: 16px; color: var(--accent); font-size:1.1em;"></i><input type="text" id="search-input" class="auth-input" style="padding: 12px 15px 12px 50px; margin: 0; border-radius: 20px; font-size: 0.9em; border-color:#e4e7eb;" placeholder="Canın ne çekiyor? Ara..." oninput="filterRestaurants()"></div>
+            </div>
+
+            <div class="delivery-type-box">
+                <button class="del-btn active" id="btn-del-address" onclick="setDeliveryType('address')">🛵 Adrese Teslim</button>
+                <button class="del-btn" id="btn-del-pickup" onclick="setDeliveryType('pickup')">🥡 Restorandan Gel-Al <span style="color:var(--primary); font-size:0.85em; font-weight:800; background:#fff; padding:2px 6px; border-radius:6px;">(-%10)</span></button>
+            </div>
+
+            <div class="category-bar">
+                <button class="cat-btn active" onclick="selectCategory('', this)"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=100" class="cat-img"> Tümü</button>
+                <button class="cat-btn" onclick="selectCategory('burger', this)"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100" class="cat-img"> Burger</button>
+                <button class="cat-btn" onclick="selectCategory('pizza', this)"><img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100" class="cat-img"> Pizza</button>
+                <button class="cat-btn" onclick="selectCategory('döner', this)"><img src="https://images.unsplash.com/photo-1633321702518-7feccafb94d5?w=100" class="cat-img"> Kebap & Döner</button>
+                <button class="cat-btn" onclick="selectCategory('sosisli', this)"><div class="cat-img" style="display:flex; align-items:center; justify-content:center; background:#ffeaa7; color:#d35400; font-size:1.2em;">🌭</div> Sokak Lezzetleri</button>
+            </div>
+
+            <div id="restoranlar" class="restaurant-grid"></div>
+            
+            <h3 id="table-header-title" style="margin-top: 40px; font-size:1.5em; font-weight:800;"><i class="fas fa-clipboard-list" style="color:var(--accent);"></i> Sipariş Yönetimi</h3>
+            <table><thead><tr><th>ID</th><th>Restoran</th><th>Canlı Durum Takibi</th><th>Tutar</th><th>İşlem</th></tr></thead><tbody id="siparis-listesi"></tbody></table>
+        </div>
+
+        <div class="side-panel">
+            <h3 id="cart-title" style="margin-top:0; font-size:1.4em; font-weight:800; color:var(--secondary); border-bottom:2px solid #f1f2f6; padding-bottom:15px;"><i class="fas fa-shopping-basket" style="color:var(--primary);"></i> Sepetim</h3>
+            <div id="quick-discount-banner" style="background: linear-gradient(135deg, #ff5e62, #ff9966); color: white; padding: 15px; border-radius: 20px; text-align: center; font-size: 0.9em; margin-bottom: 20px; display: none; box-shadow: 0 10px 25px rgba(255, 94, 98, 0.3); position: relative; border: 2px solid #ffcccb;"><button onclick="resetQuickTimer()" style="position: absolute; right: 12px; top: 12px; background: rgba(255,255,255,0.3); border: none; color: white; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 0.85em; display: flex; align-items: center; justify-content: center;">🔄</button><b style="font-size: 1.2em;">🔥 HOŞ GELDİN FIRSATI!</b><br>Son <span id="quick-timer-val" style="font-weight:800; font-size:1.5em; display:inline-block; margin:5px 0; background:rgba(0,0,0,0.2); padding:2px 10px; border-radius:8px;">15:00</span> dk<br><small style="opacity: 0.95; font-weight:600;">Harcadıkça artan anında indirim kazan!</small></div>
+            <div id="cart-items" class="cart-items-list"></div>
+            <div id="min-warning" class="min-order-warning"></div>
+            
+            <div style="border-top:2px solid #f1f2f6; padding-top:15px; margin-top:10px;">
+                <div id="tip-container" style="display:none; margin-bottom:15px;"><span style="font-size:0.85em; font-weight:800; color:var(--secondary);">🛵 Kurye Bahşişi <small style="color:var(--success); font-weight:600;">(İsteğe Bağlı)</small></span><div class="tip-box"><button class="tip-btn" id="btn-tip-0" onclick="setTip(0)">Bahşişsiz</button><button class="tip-btn" id="btn-tip-10" onclick="setTip(10)">+10 ₺</button><button class="tip-btn" id="btn-tip-20" onclick="setTip(20)">+20 ₺</button><button class="tip-btn" id="btn-tip-30" onclick="setTip(30)">+30 ₺</button></div></div>
+                
+                <div id="cross-sell-box" class="cross-sell-container" style="display:none;">
+                    <div class="cross-sell-title"><i class="fas fa-lightbulb"></i> Bunun Yanına İyi Gider</div>
+                    <div class="cross-sell-items">
+                        <div class="cs-item" onclick="addDirectCrossSell(9911, 'Çıtır Patates Kızartması', 40)"><img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=100"> Patates (+40₺)</div>
+                        <div class="cs-item" onclick="addDirectCrossSell(9912, 'Çıtır Soğan Halkası', 30)"><img src="https://images.unsplash.com/photo-1639024471287-01021469e7be?w=100"> Soğan Halkası (+30₺)</div>
+                        <div class="cs-item" onclick="addDirectCrossSell(9913, 'Sarımsaklı Mayonez', 10)">🧄 Mayonez (+10₺)</div>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:8px; margin:15px 0;"><input type="text" id="coupon" class="auth-input" style="padding:12px; margin:0; border-color:#e4e7eb;" placeholder="Kupon Kodu"> <button class="btn btn-primary" style="width:auto; padding:12px 20px;" onclick="applyCoupon()">Ekle</button></div>
+                <div id="cart-total" style="font-weight:800; font-size:1.4em; margin-bottom:15px; display:flex; justify-content:space-between; color:var(--secondary);"><span>Toplam:</span> <span id="total-val" style="color:var(--primary);">0.00 ₺</span></div>
+                <button class="btn btn-primary" id="order-btn" style="display:none; padding:18px; font-size:1.1em; font-weight:800; border-radius:20px;" onclick="confirmOrder()">Siparişi Tamamla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="customModal" class="modal" style="z-index: 1100;">
+    <div class="modal-content" style="width:420px;">
+        <h2 id="custom-title" style="color:var(--primary); margin-top:0; font-weight:800;">Ürün Özelleştir</h2>
+        <p id="custom-base-price" style="font-weight:700; color:var(--accent); margin-bottom:20px;"></p>
+        
+        <div class="custom-group">
+            <label><i class="fas fa-fire"></i> Pişme Derecesi</label>
+            <select id="custom-doneness" class="auth-input" style="padding:8px; margin:0;">
+                <option value="Orta Pişmiş">Orta Pişmiş (Standart)</option>
+                <option value="İyi Pişmiş">İyi Pişmiş</option>
+                <option value="Az Pişmiş">Az Pişmiş</option>
+            </select>
+        </div>
+
+        <div class="custom-group">
+            <label><i class="fas fa-plus-circle"></i> Ekstra Malzemeler</label>
+            <div class="custom-option">
+                <label style="display:inline; font-weight:600;"><input type="checkbox" id="ex-cheddar" value="15"> Cheddar Peyniri (+15 ₺)</label>
+            </div>
+            <div class="custom-option">
+                <label style="display:inline; font-weight:600;"><input type="checkbox" id="ex-jalapeno" value="10"> Jalapeno Biberi (+10 ₺)</label>
+            </div>
+            <div class="custom-option">
+                <label style="display:inline; font-weight:600;"><input type="checkbox" id="ex-truffle" value="12"> Truffle Mantar Sos (+12 ₺)</label>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" style="padding:14px; font-size:1em;" onclick="applyCustomization()">Sepete Ekle</button>
+        <button class="btn btn-outline" style="width:100%; margin-top:10px; padding:10px;" onclick="closeModal('customModal')">Vazgeç</button>
+    </div>
+</div>
+
+<div id="flashModal" class="modal">
+    <div class="modal-content">
+        <div style="font-size:3em; margin-bottom:5px;">⚡</div>
+        <h2 style="color:var(--primary); font-size:2em; margin:0; font-weight:800;">FLASH İNDİRİM BAŞLADI!</h2>
+        <p style="color:#747d8c; font-size:1.05em; font-weight:600; margin:5px 0 15px 0;">İlk siparişini 15 dakika içinde tamamla, sepet tutarına göre anında <b style="color:var(--primary);">%20'ye varan</b> indirimi kap!</p>
+        <div style="background:#e8fbf0; color:var(--success); padding:8px 15px; border-radius:12px; font-weight:800; font-size:0.9em; margin-bottom:15px; border:1px solid #badbcc;">🍔 Tokat Merkezdeki TÜM Restoranlarda ve Menülerde Geçerlidir!</div>
+        <div class="pop-res-showcase">
+            <button class="pop-res-item" onclick="triggerShowcaseMenu(1, 'Pizza Kulesi')"><img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100"> Pizza Kulesi</button>
+            <button class="pop-res-item" onclick="triggerShowcaseMenu(3, 'Burger Sarayı')"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100"> Burger Sarayı</button>
+            <button class="pop-res-item" onclick="triggerShowcaseMenu(6, 'Dönerci Poyraz')"><img src="https://images.unsplash.com/photo-1633321702518-7feccafb94d5?w=100"> Dönerci Poyraz</button>
+            <button class="pop-res-item" style="background:#ffeaa7; color:#d35400;" onclick="triggerShowcaseMenu(4, 'Sosisli Dünyası')">🌭 Sosisli Dünyası</button>
+        </div>
+        <div style="background:linear-gradient(135deg, var(--secondary), #2f3542); color:white; padding:12px; border-radius:18px; font-size:1.1em; font-weight:800; margin-bottom:20px;">Kalan Süre: <span id="pop-timer-val" style="color:#fff200; font-size:1.4em;">15:00</span></div>
+        <div style="display:flex; justify-content:space-around; background:#fff9e6; padding:12px; border-radius:15px; border:1px solid #ffeaa7; margin-bottom:20px; font-size:0.85em; font-weight:700;"><div>🥉 200₺ Üzeri<br><b style="color:var(--primary); font-size:1.3em;">%10</b></div><div>🥈 400₺ Üzeri<br><b style="color:var(--primary); font-size:1.3em;">%15</b></div><div>🥇 600₺ Üzeri<br><b style="color:var(--primary); font-size:1.3em;">%20</b></div></div>
+        <button class="btn btn-primary" style="padding:14px; font-size:1.05em; font-weight:800; border-radius:15px;" onclick="closeModal('flashModal')">🔥 Fırsatları İncele</button>
+    </div>
+</div>
+
+<button id="flash-open-trigger" class="flash-trigger-btn" onclick="openModal('flashModal')">⚡ Flash İndirim (Aç)</button>
+<div id="menuModal" class="modal"><div class="modal-content"><h2 id="modalTitle" style="color:var(--primary); margin-top:0;"></h2><div id="urun-listesi"></div><button class="btn btn-outline" style="width:100%; margin-top:20px;" onclick="closeModal('menuModal')">Kapat</button></div></div>
+<div id="pModal" class="modal"><div class="modal-content"><h2 style="color:var(--secondary); margin-top:0;">Profil & Adres</h2><input type="text" id="p-phone" class="auth-input" placeholder="Telefon Numarası"><textarea id="p-addr" class="auth-input" style="height:100px; resize:none;" placeholder="Açık adresiniz..."></textarea><button class="btn btn-primary" onclick="saveProfile()">Bilgileri Kaydet</button><button class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="closeModal('pModal')">Kapat</button></div></div>
+<div id="cModal" class="modal"><div class="modal-content"><h2 style="color:var(--secondary); margin-top:0;">Kuponlarım</h2><div style="background: linear-gradient(135deg, #fff9e6, #fff0c2); border-left: 6px solid var(--accent); padding: 20px; border-radius: 15px;"><strong style="font-size:1.2em; color:#d35400;">LEZZET50</strong><p style="margin:5px 0 0 0; font-size:0.9em; color:#777; font-weight:600;">Sepette anında 50 ₺ indirim sağlar!</p></div><button class="btn btn-outline" style="width:100%; margin-top:15px;" onclick="closeModal('cModal')">Kapat</button></div></div>
+<div id="detailModal" class="modal"><div class="modal-content"><h2 id="detailTitle" style="color:var(--primary); margin-top:0; font-weight:800;">Detaylar</h2><div id="detailContent"></div><div id="detailFooter" style="margin-top:20px; padding-top:15px; border-top:2px solid #f1f2f6; font-weight:800; font-size:1.2em; display:flex; justify-content:space-between; color:var(--secondary);"></div><button class="btn btn-outline" style="width:100%; margin-top:20px;" onclick="closeModal('detailModal')">Kapat</button></div></div>
+
+<script>
+    const API = "https://localhost:7239/api";
+    let cart = [], currentResIdInCart = null, currentResNameInCart = null, discount = 0, deliveryType = "address", currentTip = 0, cachedRestaurants = [], activeCategory = "";
+    let pendingCustomItem = null; 
+    const minOrders = { 1: 250, 3: 200, 4: 150, 6: 180, default: 120 };
+
+    const sfxAdd = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
+    const sfxOrder = new Audio('https://www.soundjay.com/buttons/sounds/button-3.mp3');
+    function playSfx(audio) { audio.currentTime = 0; audio.play().catch(() => {}); }
+
+    function getImg(name) {
+        const n = (name || "").toLowerCase();
+        if(n.includes("pizza")) return "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400";
+        if(n.includes("burger")) return "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400";
+        if(n.includes("döner") || n.includes("kebap")) return "https://images.unsplash.com/photo-1633321702518-7feccafb94d5?w=400";
+        return "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400";
+    }
+
+    function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0'); const m = String(now.getMinutes()).padStart(2, '0'); const s = String(now.getSeconds()).padStart(2, '0');
+        const clockEl = document.getElementById('live-clock'); if(clockEl) clockEl.innerText = h + ":" + m + ":" + s;
+        
+        let msg = "İyi Geceler"; if(now.getHours() >= 5 && now.getHours() < 12) msg = "Günaydın"; else if(now.getHours() >= 12 && now.getHours() < 18) msg = "İyi Günler"; else if(now.getHours() >= 18 && now.getHours() < 23) msg = "İyi Akşamlar";
+        const welcomeEl = document.getElementById('welcome-msg');
+        const uname = localStorage.getItem("username") || "";
+        if(welcomeEl) welcomeEl.innerText = msg + ", " + uname;
+        
+        updateTimerBanner();
+    }
+    setInterval(updateClock, 1000);
+
+    function triggerShowcaseMenu(id, name) { closeModal('flashModal'); setTimeout(() => openMenu(id, name), 200); }
+    function setDeliveryType(t) { deliveryType = t; document.getElementById("btn-del-address").classList.toggle("active", t==="address"); document.getElementById("btn-del-pickup").classList.toggle("active", t==="pickup"); if(t==="pickup") currentTip=0; updateTipButtons(); renderCart(); }
+    function setTip(v) { currentTip = v; updateTipButtons(); renderCart(); }
+    function updateTipButtons() { document.querySelectorAll(".tip-btn").forEach(b => b.classList.remove("active")); const a = document.getElementById("btn-tip-" + currentTip); if(a) a.classList.add("active"); }
+
+    function resetQuickTimer() { const u = localStorage.getItem("username"); if (u) { localStorage.setItem("session_start_" + u, Date.now()); renderCart(); openModal('flashModal'); alert("⏱️ Süre sıfırlandı!"); } }
+
+    function updateTimerBanner() {
+        const u = localStorage.getItem("username"); const banner = document.getElementById("quick-discount-banner");
+        const trigger = document.getElementById("flash-open-trigger"); const popTimerVal = document.getElementById("pop-timer-val");
+        if(!u) return; const st = localStorage.getItem("session_start_" + u); if(!st) return;
+        const elapsed = Date.now() - parseInt(st); const timeLeft = (15 * 60 * 1000) - elapsed;
+        if(timeLeft > 0) {
+            if(banner) banner.style.display = "block"; if(trigger) trigger.style.display = "block";
+            const mins = Math.floor(timeLeft / 60000); const secs = Math.floor((timeLeft % 60000) / 1000);
+            const fmt = String(mins).padStart(2,'0') + ":" + String(secs).padStart(2,'0');
+            document.getElementById("quick-timer-val").innerText = fmt; if(popTimerVal) popTimerVal.innerText = fmt;
+        } else { if(banner) banner.style.display = "none"; if(trigger) trigger.style.display = "none"; closeModal('flashModal'); }
+    }
+
+    function getQuickDiscount(subtotal) { const u = localStorage.getItem("username"); if (!u) return 0; const st = localStorage.getItem("session_start_" + u); if (!st || (Date.now() - parseInt(st)) > 15 * 60 * 1000) return 0; if (subtotal >= 600) return subtotal * 0.20; if (subtotal >= 400) return subtotal * 0.15; if (subtotal >= 200) return subtotal * 0.10; return 0; }
+
+    function applyCoupon() { const cEl = document.getElementById("coupon"); if(!cEl) return; if(cEl.value.toUpperCase() === "LEZZET50") { discount = 50; renderCart(); alert("İndirim uygulandı!"); } else alert("Geçersiz!"); }
+
+    function toggleAuthMode() { const isL = document.getElementById("auth-mode-title").innerText.includes("Girişi"); document.getElementById("auth-mode-title").innerText = isL ? "Yeni Hesap Oluştur" : "Sistem Girişi"; document.getElementById("e").style.display = isL ? "block" : "none"; document.getElementById("auth-action-btn").innerText = isL ? "Kayıt Ol" : "Giriş Yap"; document.getElementById("auth-action-btn").onclick = isL ? register : login; }
+
+    async function login() { const u = document.getElementById('u').value.trim(), p = document.getElementById('p').value.trim(); if(!u || !p) return alert("Doldurun!"); const res = await fetch(`${API}/Auth/login`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({username:u, Username:u, email:u, Email:u, password:p, Password:p}) }); if(res.ok) { const d = await res.json(); localStorage.setItem("token", d.token||d.Token); localStorage.setItem("username", u.split('@')[0]); localStorage.setItem("session_start_"+u.split('@')[0], Date.now()); location.reload(); } else alert("Hata!"); }
+    async function register() { const u = document.getElementById('u').value.trim(), e = document.getElementById('e').value.trim(), p = document.getElementById('p').value.trim(); if(!u || !e || !p) return alert("Doldurun!"); const res = await fetch(`${API}/Auth/register`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({username:u, email:e, password:p}) }); if(res.ok) { alert("Başarılı!"); toggleAuthMode(); } else alert("Hata!"); }
+
+    function checkAuth() { const t = localStorage.getItem("token"), u = localStorage.getItem("username"); if(t) { document.getElementById("auth-view").style.display = "none"; document.getElementById("app-view").style.display = "block"; document.getElementById("p-phone").value = localStorage.getItem("p_"+u) || ""; document.getElementById("p-addr").value = localStorage.getItem("a_"+u) || ""; updateClock(); updateTipButtons(); init().then(() => { const st = localStorage.getItem("session_start_" + u); if (st && (Date.now() - parseInt(st)) < 15 * 60 * 1000) setTimeout(() => openModal('flashModal'), 600); }); } }
+
+    async function init() { try { const res = await fetch(`${API}/Restaurants`); cachedRestaurants = await res.json(); renderRestaurants(cachedRestaurants); loadOrders(); } catch(e){} }
+
+    function selectCategory(c, btn) { activeCategory = c.toLowerCase(); document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); filterRestaurants(); }
+    function filterRestaurants() { const q = document.getElementById("search-input").value.trim().toLowerCase(); const f = cachedRestaurants.filter(r => { const n = (r.name||r.Name||"").toLowerCase(); const d = (r.description||r.Description||"").toLowerCase(); return (!q || n.includes(q) || d.includes(q)) && (!activeCategory || n.includes(activeCategory) || d.includes(activeCategory)); }); renderRestaurants(f); }
+
+    function renderRestaurants(list) {
+        const cont = document.getElementById("restoranlar"); if(!list || list.length === 0) { cont.innerHTML = "<p style='grid-column:1/-1;text-align:center;padding:30px;'>Bulunamadı.</p>"; return; }
+        let h = ""; list.forEach((r, idx) => {
+            const rn = r.name || r.Name || "Restoran"; const rid = r.id || r.Id; const min = minOrders[rid] || minOrders.default;
+            h += `<div class="res-card">
+                <span class="res-badge express">⚡ Min: ${min}₺</span>
+                <img src="${getImg(rn)}" class="res-img">
+                <div class="res-info">
+                    <div><h3 style="margin:0;font-size:1.2em;font-weight:800;color:var(--secondary);">${rn}</h3><div class="res-meta"><span>⏳ 20-30 dk</span><span style="color:var(--success);">🛵 Ücretsiz Teslimat</span></div></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;"><span class="res-rating">⭐ 4.8</span><button class="btn btn-primary btn-sm" style="width:auto;padding:10px 18px;font-weight:800;" onclick="openMenu(${rid},'${rn}')">Menüye Bak</button></div>
+                </div>
+            </div>`;
+        });
+        cont.innerHTML = h;
+    }
+
+    async function openMenu(id, name) { 
+        document.getElementById("modalTitle").innerText = name; 
+        openModal('menuModal'); 
+        try { 
+            const res = await fetch(`${API}/Products`); 
+            const data = await res.json(); 
+            
+            const filt = data.filter(p => {
+                const rIdVal = p.restaurantId !== undefined ? p.restaurantId : p.RestaurantId;
+                return rIdVal == id;
+            }); 
+            
+            const mainFoods = [];
+            const drinks = [];
+            
+            filt.forEach(p => {
+                const n = (p.name || p.Name || p.NAME || p.urunAdi || "").toLowerCase();
+                if(n.includes("menü") || n.includes("menu") || n.includes("pizza") || n.includes("burger") || n.includes("döner") || n.includes("kebap") || n.includes("sucuk")) {
+                    mainFoods.push(p);
+                } else if(/\b(kola|su|ayran|fanta|içecek|şalgam)\b/.test(n)) {
+                    drinks.push(p);
+                } else if(n.trim() !== "") {
+                    mainFoods.push(p); 
+                }
+            });
+            
+            drinks.push({ id: 9901, name: "Buz Gibi Kutu Kola", price: 35 });
+            drinks.push({ id: 9902, name: "Ferahlatıcı Yayık Ayran", price: 20 });
+            drinks.push({ id: 9903, name: "Soğuk Su (0.5L)", price: 10 });
+
+            let h = ""; 
+            if(mainFoods.length > 0) {
+                h += `<div class="menu-section-title">🍕 ANA YEMEKLER</div>`;
+                mainFoods.forEach(p => { 
+                    const pName = p.name || p.Name || p.NAME || "Ürün";
+                    const pr = p.price !== undefined ? p.price : (p.Price !== undefined ? p.Price : 0); 
+                    const pId = p.id !== undefined ? p.id : p.Id;
+                    
+                    h += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;background:#f8f9fa;padding:12px 15px;border-radius:15px;border:1px solid #f1f2f6;"><span><b style="color:var(--secondary);font-size:1.05em;">${pName}</b><br><small style="color:var(--primary);font-weight:800;font-size:1em;">${pr} ₺</small></span><button class="btn btn-primary btn-sm" style="width:auto;padding:8px 16px;" onclick="openCustomization(${pId},'${pName.replace(/'/g,"\\'")}',${pr}, ${id}, '${name.replace(/'/g,"\\'")}')">Ekle</button></div>`; 
+                });
+            }
+
+            h += `<div class="menu-section-title" style="color:#0984e3; border-color:#0984e3; margin-top:25px;">🥤 İÇECEKLER</div>`;
+            drinks.forEach(p => { 
+                const pName = p.name || p.Name || p.NAME || "İçecek";
+                const pr = p.price !== undefined ? p.price : (p.Price !== undefined ? p.Price : 0); 
+                const pId = p.id !== undefined ? p.id : p.Id;
+                
+                h += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;background:#f0f7ff;padding:12px 15px;border-radius:15px;border:1px solid #d9ebff;"><span><b style="color:var(--secondary);font-size:1.05em;">${pName}</b><br><small style="color:#0984e3;font-weight:800;font-size:1em;">${pr} ₺</small></span><button class="btn btn-primary btn-sm" style="width:auto;padding:8px 16px; background:#0984e3; box-shadow:0 4px 10px rgba(9,132,227,0.2);" onclick="add(${pId},'${pName.replace(/'/g,"\\'")}',${pr}, ${id}, '${name.replace(/'/g,"\\'")}')">Ekle</button></div>`; 
+            });
+
+            document.getElementById("urun-listesi").innerHTML = h; 
+        } catch(e){} 
+    }
+
+    // GÜNCEL MODÜL 1: ANINDA MENÜYÜ KAPATIP HER ÜRÜNÜ BAĞIMSIZCA VE EKSİKSİZ AÇAR
+    function openCustomization(id, n, p, rid, rname) {
+        // Çakışmayı ve gizlenmeyi tamamen önlemek için menü penceresini ANINDA KAPAT!
+        closeModal('menuModal'); 
+        
+        pendingCustomItem = { id, n, p, rid, rname };
+        document.getElementById("custom-title").innerText = n;
+        document.getElementById("custom-base-price").innerText = `Taban Fiyat: ${p} ₺`;
+        
+        document.getElementById("custom-doneness").value = "Orta Pişmiş";
+        document.getElementById("ex-cheddar").checked = false;
+        document.getElementById("ex-jalapeno").checked = false;
+        document.getElementById("ex-truffle").checked = false;
+        
+        // Yumuşak geçişle doğrudan üstte patlat
+        setTimeout(() => {
+            openModal('customModal');
+        }, 100);
+    }
+
+    function applyCustomization() {
+        if(!pendingCustomItem) return;
+        const base = pendingCustomItem;
+        
+        let extraPrice = 0;
+        let extraNames = [];
+        
+        const doneVal = document.getElementById("custom-doneness").value;
+        if(doneVal !== "Orta Pişmiş") extraNames.push(doneVal);
+
+        if(document.getElementById("ex-cheddar").checked) { extraPrice += 15; extraNames.push("Cheddar"); }
+        if(document.getElementById("ex-jalapeno").checked) { extraPrice += 10; extraNames.push("Jalapeno"); }
+        if(document.getElementById("ex-truffle").checked) { extraPrice += 12; extraNames.push("Truffle"); }
+
+        const finalPrice = base.p + extraPrice;
+        const finalName = extraNames.length > 0 ? `${base.n} (${extraNames.join(', ')})` : base.n;
+        
+        const uniqueVariantId = base.id + (extraPrice * 100) + extraNames.length;
+
+        closeModal('customModal');
+        add(uniqueVariantId, finalName, finalPrice, base.rid, base.rname);
+    }
+
+    function addDirectCrossSell(id, n, p) {
+        if(!currentResIdInCart) return alert("Önce bir restorandan ana ürün eklemelisiniz!");
+        add(id, n, p, currentResIdInCart, currentResNameInCart);
+        alert("🎁 Önerilen lezzet sepetinize eklendi!");
+    }
+
+    function add(id, n, p, rid, rname) { 
+        if(cart.length > 0 && currentResIdInCart !== rid) { if(confirm("Sepetinizde başka dükkanın ürünleri var. Sepet temizlensin mi?")) cart = []; else return; } 
+        playSfx(sfxAdd); currentResIdInCart = rid; currentResNameInCart = rname; 
+        const item = cart.find(x => x.id === id); if(item) item.qty++; else cart.push({id, n, p, qty: 1}); 
+        
+        if(deliveryType === "address") document.getElementById("tip-container").style.display = "block"; 
+        renderCart(); 
+    }
+
+    function renderCart() {
+        const l = document.getElementById("cart-items"), t = document.getElementById("total-val"), b = document.getElementById("order-btn"), cTitle = document.getElementById("cart-title"), w = document.getElementById("min-warning"), csBox = document.getElementById("cross-sell-box");
+        if(cart.length === 0) { 
+            l.innerHTML = "<p style='text-align:center;color:#a4b0be;margin-top:60px;'>Sepetiniz henüz boş.</p>"; t.innerText = "0.00 ₺"; b.style.display = "none"; w.style.display = "none"; csBox.style.display = "none";
+            cTitle.innerHTML = `<i class="fas fa-shopping-basket" style="color:var(--primary);"></i> Sepetim`; currentResIdInCart = null; document.getElementById("tip-container").style.display = "none"; return; 
+        }
+        
+        const delBadge = deliveryType === "pickup" ? ' <span style="font-size:0.55em;background:var(--primary);color:white;padding:3px 8px;border-radius:8px;">🥡 Gel-Al</span>' : '';
+        cTitle.innerHTML = `<i class="fas fa-store" style="color:var(--accent);"></i> ${currentResNameInCart}${delBadge}`; 
+        
+        let h = "", sub = 0;
+        cart.forEach((i, idx) => { sub += (i.p * i.qty); h += `<div style="display:flex;justify-content:space-between;margin-bottom:12px;align-items:center;border-bottom:1px solid #f1f2f6;padding-bottom:8px;"><div style="font-size:0.85em;color:var(--secondary);"><b>${i.n}</b><br><span style="color:var(--primary);font-weight:700;">${i.p} ₺</span></div><div style="display:flex;align-items:center;gap:8px;"><button class="btn-icon" onclick="cart[${idx}].qty > 1 ? cart[${idx}].qty-- : cart.splice(${idx},1); renderCart();">-</button><b style="font-size:1.1em;">${i.qty}</b><button class="btn-icon" onclick="cart[${idx}].qty++; renderCart();">+</button></div></div>`; });
+        
+        const minVal = minOrders[currentResIdInCart] || minOrders.default;
+        if(sub < minVal) { w.style.display = "block"; w.innerText = `⚠️ Dükkan Limiti: Min. ${minVal}₺ olmalı! (${(minVal-sub).toFixed(2)}₺ eksik)`; b.disabled = true; } else { w.style.display = "none"; b.disabled = false; }
+
+        csBox.style.display = "block";
+
+        const qd = getQuickDiscount(sub); const pd = deliveryType === "pickup" ? sub * 0.10 : 0; let dt = "";
+        const u = localStorage.getItem("username"); const st = localStorage.getItem("session_start_" + u); const isT = st && (Date.now() - parseInt(st)) < 15 * 60 * 1000;
+
+        if (qd > 0) { let rStr = "%10"; if (sub >= 600) rStr = "%20"; else if (sub >= 400) rStr = "%15"; dt += `<div style="color:var(--primary);font-size:0.85em;font-weight:800;display:flex;justify-content:space-between;margin-top:12px;background:#fff0f0;padding:8px 10px;border-radius:10px;"><span>⏱️ İlk 15 Dk (${rStr}):</span><span>-${qd.toFixed(2)} ₺</span></div>`; } else if (isT && sub > 0 && sub < 200) { dt += `<div style="color:var(--accent);font-size:0.75em;font-weight:700;text-align:center;margin-top:12px;background:#fff9e6;padding:10px;border-radius:12px;">💡 <b>${(200-sub).toFixed(2)} ₺</b> daha ekleyin, <b>%10 indirim</b> kazanın!</div>`; }
+        if(pd > 0) dt += `<div style="color:var(--accent);font-size:0.85em;font-weight:800;display:flex;justify-content:space-between;margin-top:8px;background:#fff9e6;padding:8px 10px;border-radius:10px;"><span>🥡 Gel-Al İndirimi (%10):</span><span>-${pd.toFixed(2)} ₺</span></div>`;
+        if(discount > 0) dt += `<div style="color:var(--success);font-size:0.85em;font-weight:800;display:flex;justify-content:space-between;margin-top:8px;background:#e8fbf0;padding:8px 10px;border-radius:10px;"><span>🎟️ Kupon İndirimi:</span><span>-${discount.toFixed(2)} ₺</span></div>`;
+        if(currentTip > 0 && deliveryType === "address") dt += `<div style="color:var(--secondary);font-size:0.85em;font-weight:800;display:flex;justify-content:space-between;margin-top:8px;background:#f1f2f6;padding:8px 10px;border-radius:10px;"><span>🛵 Kurye Bahşişi:</span><span>+${currentTip.toFixed(2)} ₺</span></div>`;
+
+        l.innerHTML = h + dt; b.style.display = "block";
+        let final = sub - qd - pd - discount + (deliveryType === "address" ? currentTip : 0);
+        t.innerText = `${(final < 0 ? 0 : final).toFixed(2)} ₺`;
+    }
+
+    async function confirmOrder() { const token = localStorage.getItem("token"), uname = localStorage.getItem("username"); const adr = localStorage.getItem("a_"+uname); if(deliveryType === "address" && (!adr || adr.trim() === "")) { alert("⚠️ Adres eksik!"); openModal('pModal'); return; } const sub = cart.reduce((s,i)=>s+(i.p*i.qty),0); const qd = getQuickDiscount(sub); const pd = deliveryType === "pickup" ? sub * 0.10 : 0; const fp = sub - qd - pd - discount + (deliveryType === "address" ? currentTip : 0); const ct = fp < 0 ? 0 : fp; const fa = deliveryType === "pickup" ? "Gel-Al" : adr; const payload = { restaurantId: currentResIdInCart, customerId: 1, totalPrice: ct, status: "Hazırlanıyor", orderDate: new Date().toISOString(), address: fa }; const b = document.getElementById("order-btn"); b.innerText = "⏳ İletiliyor..."; b.disabled = true; try { const res = await fetch(`${API}/Orders`, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token }, body: JSON.stringify(payload) }); if(res.ok) { const co = await res.json(); localStorage.setItem("order_detail_" + (co.id||co.Id), JSON.stringify({ items: [...cart], discount: discount, quickDiscount: qd, pickupDiscount: pd, tip: (deliveryType === "address" ? currentTip : 0), deliveryType: deliveryType, owner: uname, isCancelled: false })); playSfx(sfxOrder); alert("✅ Alındı!"); cart = []; discount = 0; currentTip = 0; updateTipButtons(); document.getElementById("coupon").value = ""; renderCart(); loadOrders(); } else alert(`❌ Hata.`); } catch(e){} finally { b.innerText = "Siparişi Tamamla"; b.disabled = false; } }
+
+    async function loadOrders() {
+        const token = localStorage.getItem("token"), uname = localStorage.getItem("username"); if(!token) return; const isAdmin = uname.toLowerCase().includes("admin"); const ht = document.getElementById("table-header-title"); if(isAdmin) { ht.innerHTML = `<i class="fas fa-tools" style="color:var(--primary);"></i> Restoran Paneli <small style="font-size:0.5em;">(Tüm Siparişler)</small>`; ht.style.color = "var(--secondary)"; } else { ht.innerHTML = `<i class="fas fa-clipboard-list" style="color:var(--accent);"></i> Siparişlerim`; ht.style.color = "var(--secondary)"; }
+        try {
+            const rRes = await fetch(`${API}/Restaurants`), rests = await rRes.json(); const oRes = await fetch(`${API}/Orders`, {headers:{"Authorization": "Bearer "+token}}); const all = await oRes.json();
+            const display = isAdmin ? all : all.filter(o => { const det = JSON.parse(localStorage.getItem("order_detail_" + (o.id||o.Id))); return det && det.owner === uname; });
+            
+            document.getElementById("stat-h").innerText = display.filter(o => { const d = JSON.parse(localStorage.getItem("order_detail_" + (o.id||o.Id))); return (o.status || o.Status) === "Hazırlanıyor" && (!d || !d.isCancelled); }).length; 
+            document.getElementById("stat-y").innerText = display.filter(o => { const d = JSON.parse(localStorage.getItem("order_detail_" + (o.id||o.Id))); return (o.status || o.Status) === "Yolda" && (!d || !d.isCancelled); }).length; 
+            document.getElementById("stat-t").innerText = display.filter(o => { const d = JSON.parse(localStorage.getItem("order_detail_" + (o.id||o.Id))); return (o.status || o.Status) === "Teslim Edildi" && (!d || !d.isCancelled); }).length;
+
+            let h = ""; [...display].reverse().forEach(o => {
+                const r = rests.find(x => (x.id || x.Id) == (o.restaurantId || o.RestaurantId)); const s = o.status || o.Status; const id = o.id || o.Id; const p = o.totalPrice || o.TotalPrice || 0;
+                const det = JSON.parse(localStorage.getItem("order_detail_" + id)); 
+                const isC = det && det.isCancelled; 
+
+                const tb = det && det.deliveryType === "pickup" ? ' <span style="background:var(--primary);color:white;padding:3px 8px;border-radius:8px;font-size:0.7em;">🥡 Gel-Al</span>' : ' <span style="background:var(--secondary);color:white;padding:3px 8px;border-radius:8px;font-size:0.7em;">🛵 Adres</span>';
+                const ob = isAdmin && det && det.owner ? ` <small style="color:var(--primary);font-weight:800;">(${det.owner})</small>` : '';
+                
+                let pct = 35, color = "#ff9f43", icon = "👨‍🍳";
+                if(isC) { pct = 100; color = "#cf2121"; icon = "❌"; } 
+                else if(s === "Yolda") { pct = 70; color = "#0984e3"; icon = "🛵"; } 
+                else if(s === "Teslim Edildi") { pct = 100; color = "#2ed573"; icon = "✅"; }
+
+                const statusLabel = isC ? `<span class="badge cancelled">İPTAL EDİLDİ</span>` : `<div style="font-size:0.75em;font-weight:800;color:${color}">${s.toUpperCase()}</div>`;
+
+                h += `<tr><td style="font-weight:800;color:var(--secondary); ${isC?'text-decoration:line-through; opacity:0.6;':''}">#${id}</td>
+                <td style="${isC?'opacity:0.6;':''}"><b style="color:var(--secondary);font-size:1.05em; ${isC?'text-decoration:line-through;':''}">${r ? (r.name || r.Name) : 'Restoran'}</b>${tb}${ob}</td>
+                <td style="${isC?'opacity:0.7;':''}">
+                    ${statusLabel}
+                    <div class="order-track"><div class="order-track-fill" style="width:${pct}%;background:${color}"></div><div class="motor-node" style="left:calc(${pct}% - 14px)">${icon}</div></div>
+                </td>
+                <td style="${isC?'opacity:0.6;':''}"><b style="color:var(--primary);font-size:1.1em; ${isC?'text-decoration:line-through;':''}">${p} ₺</b></td>
+                <td>
+                    <button class="btn btn-outline btn-sm" style="font-weight:800;" onclick="showDetail(${id}, '${r ? (r.name || r.Name) : 'Sipariş'}')"><i class="fas fa-eye"></i> İncele</button>
+                    ${!isAdmin && s === "Hazırlanıyor" && !isC ? `<button class="btn btn-danger btn-sm" style="font-weight:800; margin-left:5px;" onclick="cancelOrder(${id})">İptal Et</button>` : ''}
+                    ${isAdmin && s !== "Teslim Edildi" && !isC ? `<button class="btn btn-outline btn-sm" onclick="updateStatus(${id},'${s}')" style="background:var(--primary);color:white;border:none;font-weight:800;margin-left:5px;">İlerlet</button>` : ''}
+                </td></tr>`;
+            });
+            document.getElementById("siparis-listesi").innerHTML = h || `<tr><td colspan="5" style="text-align:center;color:#a4b0be;padding:40px 0;">Boş.</td></tr>`;
+        } catch(e){}
+    }
+
+    function cancelOrder(id) {
+        if(!confirm("⚠️ Siparişinizi iptal etmek istediğinize emin misiniz?")) return;
+        const det = JSON.parse(localStorage.getItem("order_detail_" + id));
+        if(det) {
+            det.isCancelled = true;
+            localStorage.setItem("order_detail_" + id, JSON.stringify(det));
+            alert("❌ Siparişiniz başarıyla iptal edildi.");
+            loadOrders();
+        }
+    }
+
+    function showDetail(id, rn) { const d = JSON.parse(localStorage.getItem("order_detail_"+id)); if(!d) return; document.getElementById("detailTitle").innerText = rn + " Faturası"; let h = ""; d.items.forEach(i => { h += `<div class="detail-row"><span style="color:var(--secondary);"><b>${i.qty}x</b> ${i.n}</span><span style="color:var(--primary);font-weight:700;">${(i.p * i.qty).toFixed(2)} ₺</span></div>`; }); if(d.quickDiscount > 0) h += `<div class="detail-row" style="color:var(--primary);font-weight:800;background:#fff0f0;padding:8px;border-radius:10px;"><span>⏱️ İlk 15 Dk İndirimi</span><span>-${d.quickDiscount.toFixed(2)} ₺</span></div>`; if(d.pickupDiscount > 0) h += `<div class="detail-row" style="color:var(--accent);font-weight:800;background:#fff9e6;padding:8px;border-radius:10px;"><span>🥡 Gel-Al İndirimi (%10)</span><span>-${d.pickupDiscount.toFixed(2)} ₺</span></div>`; if(d.discount > 0) h += `<div class="detail-row" style="color:var(--success);font-weight:800;background:#e8fbf0;padding:8px;border-radius:10px;"><span>🎟️ Kupon İndirimi</span><span>-${d.discount.toFixed(2)} ₺</span></div>`; if(d.tip > 0) h += `<div class="detail-row" style="color:var(--secondary);font-weight:800;background:#f1f2f6;padding:8px;border-radius:10px;"><span>🛵 Kurye Bahşişi</span><span>+${d.tip.toFixed(2)} ₺</span></div>`; document.getElementById("detailContent").innerHTML = h; const sub = d.items.reduce((s,i)=>s+(i.p*i.qty),0); const total = sub - (d.quickDiscount || 0) - (d.pickupDiscount || 0) - d.discount + (d.tip || 0); document.getElementById("detailFooter").innerHTML = `<span>Genel Toplam:</span><span style="color:var(--primary);font-size:1.2em;">${(total<0?0:total).toFixed(2)} ₺</span>`; openModal('detailModal'); }
+
+    async function updateStatus(id, curr) { const next = curr === "Hazırlanıyor" ? "Yolda" : "Teslim Edildi"; try { const res = await fetch(`${API}/Orders/${id}`, {headers:{"Authorization":"Bearer "+localStorage.getItem("token")}}); const order = await res.json(); if(order.status) order.status = next; else order.Status = next; await fetch(`${API}/Orders/${id}`, { method: "PUT", headers: {"Content-Type":"application/json", "Authorization":"Bearer "+localStorage.getItem("token")}, body: JSON.stringify(order) }); loadOrders(); } catch(e){} }
+    function saveProfile() { const u = localStorage.getItem("username"); localStorage.setItem("p_"+u, document.getElementById("p-phone").value); localStorage.setItem("a_"+u, document.getElementById("p-addr").value); alert("Kaydedildi!"); closeModal('pModal'); }
+    function logout() { localStorage.removeItem("token"); localStorage.removeItem("username"); location.reload(); }
+    function openModal(id) { document.getElementById(id).style.display = "block"; }
+    function closeModal(id) { document.getElementById(id).style.display = "none"; }
+    checkAuth();
+</script>
+</body>
+</html>
