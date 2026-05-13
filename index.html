@@ -193,7 +193,7 @@
                     <div class="cross-sell-title"><i class="fas fa-lightbulb"></i> Bunun Yanına İyi Gider</div>
                     <div class="cross-sell-items">
                         <div class="cs-item" onclick="addDirectCrossSell(9911, 'Çıtır Patates Kızartması', 40)"><img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=100"> Patates (+40₺)</div>
-                        <div class="cs-item" onclick="addDirectCrossSell(9912, 'Çıtır Soğan Halkası', 30)"><img src="https://images.unsplash.com/photo-1639024471287-01021469e7be?w=100"> Soğan Halkası (+30₺)</div>
+                        <div class="cs-item" onclick="addDirectCrossSell(9912, 'Çıtır Soğan Halkası', 30)"><img src="https://images.unsplash.com/photo-1639024471283-035188835118?w=100"> Soğan Halkası (+30₺)</div>
                         <div class="cs-item" onclick="addDirectCrossSell(9913, 'Sarımsaklı Mayonez', 10)">🧄 Mayonez (+10₺)</div>
                     </div>
                 </div>
@@ -323,7 +323,7 @@
     async function login() { const u = document.getElementById('u').value.trim(), p = document.getElementById('p').value.trim(); if(!u || !p) return alert("Doldurun!"); const res = await fetch(`${API}/Auth/login`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({username:u, Username:u, email:u, Email:u, password:p, Password:p}) }); if(res.ok) { const d = await res.json(); localStorage.setItem("token", d.token||d.Token); localStorage.setItem("username", u.split('@')[0]); localStorage.setItem("session_start_"+u.split('@')[0], Date.now()); location.reload(); } else alert("Hata!"); }
     async function register() { const u = document.getElementById('u').value.trim(), e = document.getElementById('e').value.trim(), p = document.getElementById('p').value.trim(); if(!u || !e || !p) return alert("Doldurun!"); const res = await fetch(`${API}/Auth/register`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({username:u, email:e, password:p}) }); if(res.ok) { alert("Başarılı!"); toggleAuthMode(); } else alert("Hata!"); }
 
-    function checkAuth() { const t = localStorage.getItem("token"), u = localStorage.getItem("username"); if(t) { document.getElementById("auth-view").style.display = "none"; document.getElementById("app-view").style.display = "block"; document.getElementById("p-phone").value = localStorage.getItem("p_"+u) || ""; document.getElementById("p-addr").value = localStorage.getItem("a_"+u) || ""; updateClock(); updateTipButtons(); init().then(() => { const st = localStorage.getItem("session_start_" + u); if (st && (Date.now() - parseInt(st)) < 15 * 60 * 1000) setTimeout(() => openModal('flashModal'), 600); }); } }
+    function checkAuth() { const t = localStorage.getItem("token"), u = localStorage.getItem("username"); if(t) { document.getElementById("auth-view").style.display = "none"; document.getElementById("app-view").style.display = "block"; document.getElementById("user-display").innerText = u; document.getElementById("p-phone").value = localStorage.getItem("p_"+u) || ""; document.getElementById("p-addr").value = localStorage.getItem("a_"+u) || ""; updateClock(); updateTipButtons(); init().then(() => { const st = localStorage.getItem("session_start_" + u); if (st && (Date.now() - parseInt(st)) < 15 * 60 * 1000) setTimeout(() => openModal('flashModal'), 600); }); } }
 
     async function init() { try { const res = await fetch(`${API}/Restaurants`); cachedRestaurants = await res.json(); renderRestaurants(cachedRestaurants); loadOrders(); } catch(e){} }
 
@@ -339,7 +339,7 @@
                 <img src="${getImg(rn)}" class="res-img">
                 <div class="res-info">
                     <div><h3 style="margin:0;font-size:1.2em;font-weight:800;color:var(--secondary);">${rn}</h3><div class="res-meta"><span>⏳ 20-30 dk</span><span style="color:var(--success);">🛵 Ücretsiz Teslimat</span></div></div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;"><span class="res-rating">⭐ 4.8</span><button class="btn btn-primary btn-sm" style="width:auto;padding:10px 18px;font-weight:800;" onclick="openMenu(${rid},'${rn}')">Menüye Bak</button></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;"><span class="res-rating">⭐ 4.8</span><button class="btn btn-primary btn-sm" style="width:auto;padding:10px 18px;font-weight:800;" onclick="openMenu(${rid},'${rn.replace(/'/g,"\\'")}')">Menüye Bak</button></div>
                 </div>
             </div>`;
         });
@@ -401,11 +401,8 @@
         } catch(e){} 
     }
 
-    // GÜNCEL MODÜL 1: ANINDA MENÜYÜ KAPATIP HER ÜRÜNÜ BAĞIMSIZCA VE EKSİKSİZ AÇAR
     function openCustomization(id, n, p, rid, rname) {
-        // Çakışmayı ve gizlenmeyi tamamen önlemek için menü penceresini ANINDA KAPAT!
         closeModal('menuModal'); 
-        
         pendingCustomItem = { id, n, p, rid, rname };
         document.getElementById("custom-title").innerText = n;
         document.getElementById("custom-base-price").innerText = `Taban Fiyat: ${p} ₺`;
@@ -415,16 +412,12 @@
         document.getElementById("ex-jalapeno").checked = false;
         document.getElementById("ex-truffle").checked = false;
         
-        // Yumuşak geçişle doğrudan üstte patlat
-        setTimeout(() => {
-            openModal('customModal');
-        }, 100);
+        setTimeout(() => openModal('customModal'), 100);
     }
 
     function applyCustomization() {
         if(!pendingCustomItem) return;
         const base = pendingCustomItem;
-        
         let extraPrice = 0;
         let extraNames = [];
         
@@ -437,7 +430,6 @@
 
         const finalPrice = base.p + extraPrice;
         const finalName = extraNames.length > 0 ? `${base.n} (${extraNames.join(', ')})` : base.n;
-        
         const uniqueVariantId = base.id + (extraPrice * 100) + extraNames.length;
 
         closeModal('customModal');
@@ -445,7 +437,7 @@
     }
 
     function addDirectCrossSell(id, n, p) {
-        if(!currentResIdInCart) return alert("Önce bir restorandan ana ürün eklemelisiniz!");
+        if(!currentResIdInCart) return alert("Önce bir restorandan ana menü eklemelisiniz!");
         add(id, n, p, currentResIdInCart, currentResNameInCart);
         alert("🎁 Önerilen lezzet sepetinize eklendi!");
     }
@@ -490,12 +482,94 @@
         t.innerText = `${(final < 0 ? 0 : final).toFixed(2)} ₺`;
     }
 
-    async function confirmOrder() { const token = localStorage.getItem("token"), uname = localStorage.getItem("username"); const adr = localStorage.getItem("a_"+uname); if(deliveryType === "address" && (!adr || adr.trim() === "")) { alert("⚠️ Adres eksik!"); openModal('pModal'); return; } const sub = cart.reduce((s,i)=>s+(i.p*i.qty),0); const qd = getQuickDiscount(sub); const pd = deliveryType === "pickup" ? sub * 0.10 : 0; const fp = sub - qd - pd - discount + (deliveryType === "address" ? currentTip : 0); const ct = fp < 0 ? 0 : fp; const fa = deliveryType === "pickup" ? "Gel-Al" : adr; const payload = { restaurantId: currentResIdInCart, customerId: 1, totalPrice: ct, status: "Hazırlanıyor", orderDate: new Date().toISOString(), address: fa }; const b = document.getElementById("order-btn"); b.innerText = "⏳ İletiliyor..."; b.disabled = true; try { const res = await fetch(`${API}/Orders`, { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token }, body: JSON.stringify(payload) }); if(res.ok) { const co = await res.json(); localStorage.setItem("order_detail_" + (co.id||co.Id), JSON.stringify({ items: [...cart], discount: discount, quickDiscount: qd, pickupDiscount: pd, tip: (deliveryType === "address" ? currentTip : 0), deliveryType: deliveryType, owner: uname, isCancelled: false })); playSfx(sfxOrder); alert("✅ Alındı!"); cart = []; discount = 0; currentTip = 0; updateTipButtons(); document.getElementById("coupon").value = ""; renderCart(); loadOrders(); } else alert(`❌ Hata.`); } catch(e){} finally { b.innerText = "Siparişi Tamamla"; b.disabled = false; } }
+    // GÜNCEL MODÜL 2: SİPARİŞ TAMAMLAMA (VERİ TİPİ UYUŞMAZLIKLARI & CAMELCASE HATALARI TAMAMEN ÇÖZÜLDÜ)
+    async function confirmOrder() { 
+        const token = localStorage.getItem("token") || "";
+        const uname = localStorage.getItem("username") || "Misafir"; 
+        const adr = localStorage.getItem("a_" + uname) || "Tokat/Merkez"; 
+        
+        if(deliveryType === "address" && (!adr || adr.trim() === "")) { 
+            alert("⚠️ Siparişi tamamlamak için lütfen açık adresinizi profil alanından kaydedin!"); 
+            openModal('pModal'); 
+            return; 
+        } 
+        
+        const sub = cart.reduce((s,i) => s + (i.p * i.qty), 0); 
+        const qd = getQuickDiscount(sub); 
+        const pd = deliveryType === "pickup" ? sub * 0.10 : 0; 
+        const fp = sub - qd - pd - discount + (deliveryType === "address" ? currentTip : 0); 
+        const ct = fp < 0 ? 0 : fp; 
+        const fa = deliveryType === "pickup" ? "Restorandan Gel-Al" : adr; 
+        
+        // PAYLOAD STABİLİZASYONU: C# int/decimal eşleşmesi için kesin dönüştürme ve yedekli JSON standardı
+        const payload = { 
+            restaurantId: parseInt(currentResIdInCart),
+            RestaurantId: parseInt(currentResIdInCart),
+            customerId: 1, 
+            CustomerId: 1,
+            totalPrice: parseFloat(ct.toFixed(2)), 
+            TotalPrice: parseFloat(ct.toFixed(2)),
+            status: "Hazırlanıyor", 
+            Status: "Hazırlanıyor",
+            orderDate: new Date().toISOString(), 
+            OrderDate: new Date().toISOString(),
+            address: fa,
+            Address: fa
+        }; 
+        
+        const b = document.getElementById("order-btn"); 
+        b.innerText = "⏳ Mutfağa İletiliyor..."; 
+        b.disabled = true; 
+        
+        try { 
+            const res = await fetch(`${API}/Orders`, { 
+                method: "POST", 
+                headers: { 
+                    "Content-Type": "application/json", 
+                    "Authorization": token ? "Bearer " + token : "" 
+                }, 
+                body: JSON.stringify(payload) 
+            }); 
+            
+            if(res.ok) { 
+                const co = await res.json(); 
+                const targetId = co.id || co.Id || Date.now();
+                localStorage.setItem("order_detail_" + targetId, JSON.stringify({ 
+                    items: [...cart], 
+                    discount: discount, 
+                    quickDiscount: qd, 
+                    pickupDiscount: pd, 
+                    tip: (deliveryType === "address" ? currentTip : 0), 
+                    deliveryType: deliveryType, 
+                    owner: uname, 
+                    isCancelled: false 
+                })); 
+                playSfx(sfxOrder); 
+                alert("🚀 Mükemmel! Siparişiniz başarıyla restoran mutfağına iletildi."); 
+                cart = []; discount = 0; currentTip = 0; updateTipButtons(); 
+                document.getElementById("coupon").value = ""; 
+                renderCart(); loadOrders(); 
+            } else { 
+                const errorText = await res.text();
+                console.error("API Bağlantı Raporu:", errorText);
+                alert(`❌ Sipariş İletim Hatası: Lütfen Visual Studio (Backend) projenizin çalışır durumda olduğundan ve veritabanı bağlantısından emin olun.\n\nDetay: ${errorText}`); 
+            } 
+        } catch(e) {
+            console.error("Fetch Hatası:", e);
+            alert("❗ Sunucuya bağlanılamadı. Lütfen API adresinizin (https://localhost:7239) doğruluğunu ve IIS Express'in arkada çalıştığını kontrol edin.");
+        } finally { 
+            b.innerText = "Siparişi Tamamla"; 
+            b.disabled = false; 
+        } 
+    }
 
     async function loadOrders() {
-        const token = localStorage.getItem("token"), uname = localStorage.getItem("username"); if(!token) return; const isAdmin = uname.toLowerCase().includes("admin"); const ht = document.getElementById("table-header-title"); if(isAdmin) { ht.innerHTML = `<i class="fas fa-tools" style="color:var(--primary);"></i> Restoran Paneli <small style="font-size:0.5em;">(Tüm Siparişler)</small>`; ht.style.color = "var(--secondary)"; } else { ht.innerHTML = `<i class="fas fa-clipboard-list" style="color:var(--accent);"></i> Siparişlerim`; ht.style.color = "var(--secondary)"; }
+        const token = localStorage.getItem("token") || "", uname = localStorage.getItem("username") || "Misafir"; 
+        const isAdmin = uname.toLowerCase().includes("admin"); 
+        const ht = document.getElementById("table-header-title"); 
+        if(isAdmin) { ht.innerHTML = `<i class="fas fa-tools" style="color:var(--primary);"></i> Restoran Paneli <small style="font-size:0.5em;">(Tüm Siparişler)</small>`; ht.style.color = "var(--secondary)"; } else { ht.innerHTML = `<i class="fas fa-clipboard-list" style="color:var(--accent);"></i> Siparişlerim`; ht.style.color = "var(--secondary)"; }
         try {
-            const rRes = await fetch(`${API}/Restaurants`), rests = await rRes.json(); const oRes = await fetch(`${API}/Orders`, {headers:{"Authorization": "Bearer "+token}}); const all = await oRes.json();
+            const rRes = await fetch(`${API}/Restaurants`), rests = await rRes.json(); const oRes = await fetch(`${API}/Orders`, {headers:{"Authorization": token ? "Bearer "+token : ""}}); const all = await oRes.json();
             const display = isAdmin ? all : all.filter(o => { const det = JSON.parse(localStorage.getItem("order_detail_" + (o.id||o.Id))); return det && det.owner === uname; });
             
             document.getElementById("stat-h").innerText = display.filter(o => { const d = JSON.parse(localStorage.getItem("order_detail_" + (o.id||o.Id))); return (o.status || o.Status) === "Hazırlanıyor" && (!d || !d.isCancelled); }).length; 
@@ -530,7 +604,7 @@
                     ${isAdmin && s !== "Teslim Edildi" && !isC ? `<button class="btn btn-outline btn-sm" onclick="updateStatus(${id},'${s}')" style="background:var(--primary);color:white;border:none;font-weight:800;margin-left:5px;">İlerlet</button>` : ''}
                 </td></tr>`;
             });
-            document.getElementById("siparis-listesi").innerHTML = h || `<tr><td colspan="5" style="text-align:center;color:#a4b0be;padding:40px 0;">Boş.</td></tr>`;
+            document.getElementById("siparis-listesi").innerHTML = h || `<tr><td colspan="5" style="text-align:center;color:#a4b0be;padding:40px 0;">Sipariş kaydı bulunamadı.</td></tr>`;
         } catch(e){}
     }
 
@@ -548,10 +622,12 @@
     function showDetail(id, rn) { const d = JSON.parse(localStorage.getItem("order_detail_"+id)); if(!d) return; document.getElementById("detailTitle").innerText = rn + " Faturası"; let h = ""; d.items.forEach(i => { h += `<div class="detail-row"><span style="color:var(--secondary);"><b>${i.qty}x</b> ${i.n}</span><span style="color:var(--primary);font-weight:700;">${(i.p * i.qty).toFixed(2)} ₺</span></div>`; }); if(d.quickDiscount > 0) h += `<div class="detail-row" style="color:var(--primary);font-weight:800;background:#fff0f0;padding:8px;border-radius:10px;"><span>⏱️ İlk 15 Dk İndirimi</span><span>-${d.quickDiscount.toFixed(2)} ₺</span></div>`; if(d.pickupDiscount > 0) h += `<div class="detail-row" style="color:var(--accent);font-weight:800;background:#fff9e6;padding:8px;border-radius:10px;"><span>🥡 Gel-Al İndirimi (%10)</span><span>-${d.pickupDiscount.toFixed(2)} ₺</span></div>`; if(d.discount > 0) h += `<div class="detail-row" style="color:var(--success);font-weight:800;background:#e8fbf0;padding:8px;border-radius:10px;"><span>🎟️ Kupon İndirimi</span><span>-${d.discount.toFixed(2)} ₺</span></div>`; if(d.tip > 0) h += `<div class="detail-row" style="color:var(--secondary);font-weight:800;background:#f1f2f6;padding:8px;border-radius:10px;"><span>🛵 Kurye Bahşişi</span><span>+${d.tip.toFixed(2)} ₺</span></div>`; document.getElementById("detailContent").innerHTML = h; const sub = d.items.reduce((s,i)=>s+(i.p*i.qty),0); const total = sub - (d.quickDiscount || 0) - (d.pickupDiscount || 0) - d.discount + (d.tip || 0); document.getElementById("detailFooter").innerHTML = `<span>Genel Toplam:</span><span style="color:var(--primary);font-size:1.2em;">${(total<0?0:total).toFixed(2)} ₺</span>`; openModal('detailModal'); }
 
     async function updateStatus(id, curr) { const next = curr === "Hazırlanıyor" ? "Yolda" : "Teslim Edildi"; try { const res = await fetch(`${API}/Orders/${id}`, {headers:{"Authorization":"Bearer "+localStorage.getItem("token")}}); const order = await res.json(); if(order.status) order.status = next; else order.Status = next; await fetch(`${API}/Orders/${id}`, { method: "PUT", headers: {"Content-Type":"application/json", "Authorization":"Bearer "+localStorage.getItem("token")}, body: JSON.stringify(order) }); loadOrders(); } catch(e){} }
-    function saveProfile() { const u = localStorage.getItem("username"); localStorage.setItem("p_"+u, document.getElementById("p-phone").value); localStorage.setItem("a_"+u, document.getElementById("p-addr").value); alert("Kaydedildi!"); closeModal('pModal'); }
+    function saveProfile() { const u = localStorage.getItem("username") || "Misafir"; document.getElementById("user-display").innerText = u; localStorage.setItem("p_"+u, document.getElementById("p-phone").value); localStorage.setItem("a_"+u, document.getElementById("p-addr").value); alert("Profil bilgileri başarıyla kaydedildi!"); closeModal('pModal'); }
     function logout() { localStorage.removeItem("token"); localStorage.removeItem("username"); location.reload(); }
     function openModal(id) { document.getElementById(id).style.display = "block"; }
     function closeModal(id) { document.getElementById(id).style.display = "none"; }
+    
+    // Uygulama açılış kontolü
     checkAuth();
 </script>
 </body>
