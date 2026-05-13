@@ -11,7 +11,7 @@ Gelişmiş sepet algoritmaları, kurye bahşiş sistemi, Gel-Al indirimleri ve a
 Sistemin tüm modülleri asenkron API mimarisi ile uçtan uca test edilmiş ve aşağıdaki ekran görüntüleriyle kayıt altına alınmıştır:
 
 ### 👤 1. Kullanıcı & Oturum Yönetimi
-- **Kayıt ve Giriş Paneli:** ![Giriş](giris_ekrani.png) | ![Kayıt](kayit_olma_ekrani.png)
+- **Giriş ve Kayıt Paneli:** ![Giriş](giris_ekrani.png) | ![Kayıt](kayit_olma%20ekrani.png)
 - **Kullanıcı Profil Ekranı:** ![Profil](profil_ekrani.png)
 
 ### 🍕 2. Ürün Keşfi & Dinamik Menüler
@@ -21,9 +21,10 @@ Sistemin tüm modülleri asenkron API mimarisi ile uçtan uca test edilmiş ve a
 
 ### 🛒 3. Gelişmiş Sepet & İndirim Motoru
 - **Zamanlayıcılı Flash İndirim Kampanyaları:** ![Flash İndirim](flash_indirim_ekrani.png)
+- **Kupon ve Kampanya Ekranı:** ![Kupon](kupon_ekrani.png)
 - **Sepet Özeti (Normal):** ![Sepet Normal](sepet_özeti.png)
 - **Kupon ve Gel-Al Entegrasyonlu Sepetler:** ![Kuponlu Sepet](kuponlu_gel_al_sepet_özeti.png) | ![Gel-Al Sepet](gel_al_sepet_özeti.png)
-- **Sepet Çakışma Kontrolü (Farklı Restoran Doğrulaması):** ![Sepet Temizleme Uyarısı](image_1f7b94.png)
+- **Sepet Çakışma Kontrolü (Farklı Restoran Doğrulaması):** ![Sepet Temizleme Uyarısı](restoran_yonetimi.png)
 
 ### 🚀 4. Canlı Sipariş Takibi & Fatura
 - **Sipariş Durumu:** ![Takip](siparis_takibi.png) | **Sipariş İptali:** ![İptal](siparis_iptal.png)
@@ -43,7 +44,6 @@ Sistemin tüm modülleri asenkron API mimarisi ile uçtan uca test edilmiş ve a
 
 ### 🧠 Akıllı Sepet Algoritmaları
 - **Çapraz Satış (Cross-Sell):** Sepete eklenen ürüne göre *"Bunun yanına iyi gider"* tavsiyeleri.
-- **İş Mantığı Kontrolleri:** Sepette farklı restorana ait ürün varsa otomatik çakışma algılama ve sepet temizleme onayı.
 - **Esnek Teslimat:** Adrese teslimde bahşiş entegrasyonu, Gel-Al siparişlerinde anında **%10 ekstra indirim**.
 
 ---
