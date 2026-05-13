@@ -1,70 +1,94 @@
 # 🍴 Lezzet Atlası | Online Sipariş & Restoran Yönetim Platformu
 
-Lezzet Atlası, kullanıcıların hızlı ve kolay bir şekilde yemek siparişi verebildiği, ürün özelleştirmeleri yapabildiği ve siparişlerini canlı olarak takip edebildiği modern bir **ASP.NET Core Web API** ve **Vanilla JavaScript** projesidir.
-
-Gelişmiş sepet algoritmaları, kurye bahşiş sistemi, Gel-Al indirimleri ve anlık (Flash) kampanyalar ile hem son kullanıcılara hem de restoran yöneticilerine kusursuz bir deneyim sunmayı hedefler.
+Lezzet Atlası; kullanıcıların hızlı yemek siparişi verebildiği, adminlerin ise tüm operasyonu anlık yönetebildiği **ASP.NET Core Web API** ve **Vanilla JavaScript** tabanlı tam kapsamlı bir platformdur.
 
 ---
 
-## 📸 Uygulama Arayüzü & Operasyonel Kanıtlar (UI/UX)
+## 📸 Uygulama Arayüzü & Operasyonel Kanıtlar
 
-Sistemin tüm modülleri asenkron API mimarisi ile uçtan uca test edilmiş ve aşağıdaki ekran görüntüleriyle kayıt altına alınmıştır:
+Aşağıdaki görseller, sistemin tüm modüllerinin asenkron API mimarisi ile nasıl çalıştığını adım adım göstermektedir.
 
-### 👤 1. Kullanıcı & Oturum Yönetimi
-- **Giriş ve Kayıt Paneli:** ![Giriş](giris_ekrani.png) | ![Kayıt](kayit_olma%20ekrani.png)
-- **Kullanıcı Profil Ekranı:** ![Profil](profil_ekrani.png)
+### 👤 1. Kullanıcı Giriş ve Kayıt Paneli
+Sistem, JWT tabanlı güvenli oturum yönetimi kullanmaktadır.
 
-### 🍕 2. Ürün Keşfi & Dinamik Menüler
-- **Ana Sayfa & Restoran Arama:** ![Ana Sayfa](ara_sayfa_ekrani.png) | ![Arama](restoran_arama.png)
-- **Kategori Menüleri:** ![Pizza](pizza_menüsü.png) | ![Burger](hamburger_menüsü.png) | ![Döner](dönerci_menüsü.png) | ![Sosisli](sosisli_menüsü.png)
-- **Ürün Özelleştirme (Pişme Derecesi & Malzeme Seçimi):** ![Ürün Detay](urun_detay.png)
+![Giriş Ekranı](giris_ekrani.png)
 
-### 🛒 3. Gelişmiş Sepet & İndirim Motoru
-- **Zamanlayıcılı Flash İndirim Kampanyaları:** ![Flash İndirim](flash_indirim_ekrani.png)
-- **Kupon ve Kampanya Ekranı:** ![Kupon](kupon_ekrani.png)
-- **Sepet Özeti (Normal):** ![Sepet Normal](sepet_özeti.png)
-- **Kupon ve Gel-Al Entegrasyonlu Sepetler:** ![Kuponlu Sepet](kuponlu_gel_al_sepet_özeti.png) | ![Gel-Al Sepet](gel_al_sepet_özeti.png)
-- **Sepet Çakışma Kontrolü (Farklı Restoran Doğrulaması):** ![Sepet Temizleme Uyarısı](restoran_yonetimi.png)
+<br/>
 
-### 🚀 4. Canlı Sipariş Takibi & Fatura
-- **Sipariş Durumu:** ![Takip](siparis_takibi.png) | **Sipariş İptali:** ![İptal](siparis_iptal.png)
-- **Detaylı Dijital Fatura:** ![Sipariş Özeti](siparis_özeti.png)
+![Kayıt Ekranı](kayit_olma%20ekrani.png)
 
-### ⚙️ 5. Admin / Restoran Yönetim Paneli
-- **Sipariş Aşamaları Yönetimi:** ![Admin Sipariş](admin_siparis_yonetimi.png)
-- **Restoran ve Menü Kontrolü:** ![Restoran Yönetimi](restoran_yonetimi.png)
+<br/>
+
+### 🏠 2. Ana Sayfa ve Restoran Keşfi
+Kullanıcıların restoranları listeleyebildiği ve arama yapabildiği ana ekran.
+
+![Ana Sayfa](ana_sayfa_ekrani.png)
+
+<br/>
+
+![Restoran Arama](restoran_arama.png)
+
+<br/>
+
+### 🍕 3. Menü ve Ürün Detayları
+Kategori bazlı menüler ve ürün özelleştirme (malzeme seçimi) ekranları.
+
+![Pizza Menüsü](pizza_menüsü.png)
+
+<br/>
+
+![Ürün Detay ve Özelleştirme](urun_detay.png)
+
+<br/>
+
+### 🛒 4. Gelişmiş Sepet ve İndirim Yönetimi
+Gel-Al indirimleri, kuponlar ve flash kampanyaların uygulandığı sepet modülü.
+
+![Flash İndirim Kampanyası](flash_indirim_ekrani.png)
+
+<br/>
+
+![Kupon ve Kampanya Girişi](kupon_ekrani.png)
+
+<br/>
+
+![Sepet Özeti ve İndirimler](kuponlu_gel_al_sepet_özeti.png)
+
+<br/>
+
+### 🛵 5. Canlı Sipariş Takibi ve Fatura
+Siparişin mutfaktan teslimata kadar olan süreci ve final fatura dökümü.
+
+![Canlı Sipariş Takibi](siparis_takibi.png)
+
+<br/>
+
+![Sipariş İptal Durumu](siparis_iptal.png)
+
+<br/>
+
+![Dijital Fatura Detayı](siparis_özeti.png)
+
+<br/>
+
+### ⚙️ 6. Yönetim (Admin) Panelleri
+Siparişlerin onaylandığı ve restoran/menü ayarlarının yapıldığı yetkili panelleri.
+
+![Admin Sipariş Yönetimi](admin_siparis_yonetimi.png)
+
+<br/>
+
+![Restoran ve Menü Yönetimi](restoran_yonetimi.png)
 
 ---
 
-## ✨ Öne Çıkan Özellikler
+## 🛠️ Teknik Yetkinlikler
 
-### 🔒 Kimlik Doğrulama (Auth)
-- **JWT Güvenliği:** Güvenli uç noktalar, oturum ve token yönetimi.
-- **Dinamik Formlar:** Tek ekranda pürüzsüz geçişler ve LocalStorage tabanlı oturum kontrolü.
-
-### 🧠 Akıllı Sepet Algoritmaları
-- **Çapraz Satış (Cross-Sell):** Sepete eklenen ürüne göre *"Bunun yanına iyi gider"* tavsiyeleri.
-- **Esnek Teslimat:** Adrese teslimde bahşiş entegrasyonu, Gel-Al siparişlerinde anında **%10 ekstra indirim**.
+- **Backend:** ASP.NET Core Web API (.NET 8), Entity Framework Core, JWT Auth.
+- **Frontend:** Vanilla JavaScript (ES6+), Modern CSS (Flexbox/Grid), Fetch API.
+- **Veritabanı:** SQLite / SQL Server.
 
 ---
 
-## 🛠️ Kullanılan Teknolojiler
-
-### Backend
-- **Framework:** ASP.NET Core Web API (.NET 6 / 8)
-- **ORM & DB:** Entity Framework Core, SQLite / SQL Server
-- **Güvenlik:** JWT (JSON Web Tokens), Role-based Authorization (`admin` & `user`)
-
-### Frontend
-- **Tasarım:** Modern Flexbox/Grid mimarisi, CSS Değişkenleri, Tam Duyarlı (Responsive) Tasarım.
-- **Mantık Katmanı:** Vanilla JavaScript (ES6+), Asenkron Fetch API, DOM Manipülasyonu.
-
----
-
-## 🚀 Kurulum & Çalıştırma
-
-### 1. Backend (API) Kurulumu
-1. Projeyi Visual Studio ile açın.
-2. Paket Yöneticisi Konsolu üzerinden veritabanını oluşturun:
-   ```bash
-   Update-Database
+> **Geliştirici:** Poyraz Kesgin  
+> **Durum:** Tüm modüller entegre edildi ve başarıyla test edildi.
