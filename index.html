@@ -67,9 +67,29 @@
         .order-track-fill { height: 100%; border-radius: 10px; transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .motor-node { position: absolute; top: -12px; transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-size: 1.3em; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
 
-        .side-panel { width: 420px; background: var(--card-bg); border-radius: 35px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); position: sticky; top: 110px; height: calc(100vh - 150px); display: flex; flex-direction: column; border: 1px solid #f1f2f6; }
-        .cart-items-list { flex: 1; overflow-y: auto; padding-right: 5px; }
-
+       .side-panel { 
+            width: 420px; 
+            background: var(--card-bg); 
+            border-radius: 35px; 
+            padding: 30px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08); 
+            position: sticky; 
+            top: 110px; 
+            max-height: calc(100vh - 120px); 
+            height: auto; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            border: 1px solid #f1f2f6; 
+            box-sizing: border-box; 
+        }
+        .cart-items-list { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding-right: 5px; 
+            min-height: 140px; 
+            flex-shrink: 0; 
+        }
         .min-order-warning { background: #fff0f0; border: 2px dashed var(--primary); color: var(--primary); padding: 12px; border-radius: 15px; font-size: 0.85em; font-weight: 800; text-align: center; margin-bottom: 15px; display: none; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
@@ -193,7 +213,7 @@
                     <div class="cross-sell-title"><i class="fas fa-lightbulb"></i> Bunun Yanına İyi Gider</div>
                     <div class="cross-sell-items">
                         <div class="cs-item" onclick="addDirectCrossSell(9911, 'Çıtır Patates Kızartması', 40)"><img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=100"> Patates (+40₺)</div>
-                        <div class="cs-item" onclick="addDirectCrossSell(9912, 'Çıtır Soğan Halkası', 30)"><img src="https://images.unsplash.com/photo-1639024471283-035188835118?w=100"> Soğan Halkası (+30₺)</div>
+                        <div class="cs-item" onclick="addDirectCrossSell(9912, 'Çıtır Soğan Halkası', 30)"><img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png"> Soğan Halkası (+30₺)</div>
                         <div class="cs-item" onclick="addDirectCrossSell(9913, 'Sarımsaklı Mayonez', 10)">🧄 Mayonez (+10₺)</div>
                     </div>
                 </div>
@@ -318,10 +338,53 @@
 
     function applyCoupon() { const cEl = document.getElementById("coupon"); if(!cEl) return; if(cEl.value.toUpperCase() === "LEZZET50") { discount = 50; renderCart(); alert("İndirim uygulandı!"); } else alert("Geçersiz!"); }
 
-    function toggleAuthMode() { const isL = document.getElementById("auth-mode-title").innerText.includes("Girişi"); document.getElementById("auth-mode-title").innerText = isL ? "Yeni Hesap Oluştur" : "Sistem Girişi"; document.getElementById("e").style.display = isL ? "block" : "none"; document.getElementById("auth-action-btn").innerText = isL ? "Kayıt Ol" : "Giriş Yap"; document.getElementById("auth-action-btn").onclick = isL ? register : login; }
+   function toggleAuthMode() { 
+        const isL = document.getElementById("auth-mode-title").innerText.includes("Girişi"); 
+        document.getElementById("auth-mode-title").innerText = isL ? "Yeni Hesap Oluştur" : "Sistem Girişi"; 
+        document.getElementById("e").style.display = isL ? "block" : "none"; 
+        const btn = document.getElementById("auth-action-btn");
+        btn.innerText = isL ? "Kayıt Ol" : "Giriş Yap"; 
+        btn.onclick = isL ? register : login;
+        document.getElementById("auth-toggle-btn").innerText = isL ? "Giriş Yap" : "Kayıt Ol";
+        document.getElementById("auth-toggle-text").innerText = isL ? "Zaten hesabın var mı?" : "Hesabın yok mu?";
+    }
 
-    async function login() { const u = document.getElementById('u').value.trim(), p = document.getElementById('p').value.trim(); if(!u || !p) return alert("Doldurun!"); const res = await fetch(`${API}/Auth/login`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({username:u, Username:u, email:u, Email:u, password:p, Password:p}) }); if(res.ok) { const d = await res.json(); localStorage.setItem("token", d.token||d.Token); localStorage.setItem("username", u.split('@')[0]); localStorage.setItem("session_start_"+u.split('@')[0], Date.now()); location.reload(); } else alert("Hata!"); }
-    async function register() { const u = document.getElementById('u').value.trim(), e = document.getElementById('e').value.trim(), p = document.getElementById('p').value.trim(); if(!u || !e || !p) return alert("Doldurun!"); const res = await fetch(`${API}/Auth/register`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({username:u, email:e, password:p}) }); if(res.ok) { alert("Başarılı!"); toggleAuthMode(); } else alert("Hata!"); }
+    async function login() { 
+        const u = document.getElementById('u').value.trim(), p = document.getElementById('p').value.trim(); 
+        if(!u || !p) return alert("Lütfen kullanıcı adı ve şifreyi doldurun!"); 
+        try {
+            // C# modelinin büyük/küçük harf seçiciliğini aşmak için zırhlı nesne gönderiyoruz
+            const payload = { username: u, Username: u, email: u, Email: u, password: p, Password: p };
+            const res = await fetch(`${API}/Auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); 
+            if(res.ok) { 
+                const d = await res.json(); 
+                localStorage.setItem("token", d.token || d.Token); 
+                localStorage.setItem("username", u.split('@')[0]); 
+                localStorage.setItem("session_start_" + u.split('@')[0], Date.now()); 
+                location.reload(); 
+            } else {
+                const err = await res.text();
+                alert(`❌ Giriş Başarısız (HTTP ${res.status})\n\nSunucu Çıktısı: ${err || "Kullanıcı adı veya şifre hatalı."}`);
+            }
+        } catch(e) { alert("❗ Sunucuya bağlanılamadı. Visual Studio'da projenin çalıştığından emin olun."); }
+    }
+
+    async function register() { 
+        const u = document.getElementById('u').value.trim(), e = document.getElementById('e').value.trim(), p = document.getElementById('p').value.trim(); 
+        if(!u || !e || !p) return alert("Lütfen tüm alanları doldurun!"); 
+        try {
+            // Backend tarafında eksik veri algılanmasın diye hem camelCase hem PascalCase yolluyoruz
+            const payload = { username: u, Username: u, email: e, Email: e, password: p, Password: p };
+            const res = await fetch(`${API}/Auth/register`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); 
+            if(res.ok) { 
+                alert("✅ Kayıt Başarılı! Şimdi giriş yapabilirsiniz."); 
+                toggleAuthMode(); 
+            } else { 
+                const err = await res.text();
+                alert(`❌ Kayıt Başarısız (HTTP ${res.status})\n\nSunucu Çıktısı: ${err || "Bu kullanıcı adı veya e-posta zaten kullanımda."}`); 
+            } 
+        } catch(e) { alert("❗ Sunucuya bağlanılamadı. Visual Studio'da projenin çalıştığından emin olun."); }
+    }
 
     function checkAuth() { const t = localStorage.getItem("token"), u = localStorage.getItem("username"); if(t) { document.getElementById("auth-view").style.display = "none"; document.getElementById("app-view").style.display = "block"; document.getElementById("user-display").innerText = u; document.getElementById("p-phone").value = localStorage.getItem("p_"+u) || ""; document.getElementById("p-addr").value = localStorage.getItem("a_"+u) || ""; updateClock(); updateTipButtons(); init().then(() => { const st = localStorage.getItem("session_start_" + u); if (st && (Date.now() - parseInt(st)) < 15 * 60 * 1000) setTimeout(() => openModal('flashModal'), 600); }); } }
 
